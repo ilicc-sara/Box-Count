@@ -48,7 +48,7 @@ addBtn.addEventListener("click", function (e) {
   item.setAttribute("data-id", box.getId());
   item.innerHTML = `
     <button class="btn subtract">-</button>
-    <button class="btn num">0</button>
+    <button id="${box.getId()}" class="btn num">0</button>
     <button class="btn add">+</button>
     <ion-icon class="icon" name="trash-bin-outline"></ion-icon>
     `;
@@ -63,7 +63,7 @@ addBtn.addEventListener("click", function (e) {
 
 boxCont.addEventListener("click", function (e) {
   // prettier-ignore
-  if (!e.target.classList.contains("subtract") && !e.target.classList.contains("add") && !e.target.classList.contains('num')) return;
+  if (!e.target.classList.contains("subtract") && !e.target.classList.contains("add")) return;
 
   const targetBox = boxManager
     .getBoxes()
@@ -71,19 +71,14 @@ boxCont.addEventListener("click", function (e) {
       (box) => box.getId() === e.target.closest(".box").getAttribute("data-id")
     );
 
+  const element = document.getElementById(targetBox.getId());
+
   if (e.target.classList.contains("subtract")) {
-    console.log(e.target.closest(".box").getAttribute("data-id"));
-
     targetBox.decreaseCounter();
-
-    console.log(targetBox.getCounter());
   }
 
   if (e.target.classList.contains("add")) {
-    console.log(e.target.closest(".box").getAttribute("data-id"));
-
     targetBox.increaseCounter();
-
-    console.log(targetBox.getCounter());
   }
+  element.textContent = targetBox.getCounter();
 });
