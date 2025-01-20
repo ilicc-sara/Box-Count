@@ -4,26 +4,36 @@ const addBtn = document.querySelector(".add");
 const boxCont = document.querySelector(".box-container");
 
 const emptyText = document.querySelector(".empty-text");
-console.log(addBtn);
+
+const boxesNum = document.querySelector(".boxes-num");
+const totalNum = document.querySelector(".total-boxes-num");
 
 function boxCreator() {
-  const box = { id: crypto.randomUUID() };
+  let id = crypto.randomUUID();
+  let counter = 0;
+  // variabla let id
+  const getId = () => id;
+  const getCounter = () => counter;
 
-  const getBox = () => box;
-  const getId = () => box.id;
+  const increaseCounter = () => (counter += 1);
+  const decreaseCounter = () => (counter -= 1);
 
-  return { getBox, getId };
+  return { getId, getCounter, increaseCounter, decreaseCounter };
 }
 
 // const box = boxCreator();
 
 function boxManagerCreator() {
   const boxes = [];
+  let boxesCounter = 0;
 
   const addToBoxes = (value) => boxes.push(value);
   const getBoxes = () => boxes;
 
-  return { addToBoxes, getBoxes };
+  const increaseboxesCounter = () => (boxesCounter += 1);
+  const getboxesCounter = () => boxesCounter;
+
+  return { addToBoxes, getBoxes, increaseboxesCounter, getboxesCounter };
 }
 
 const boxManager = boxManagerCreator();
@@ -31,20 +41,49 @@ const boxManager = boxManagerCreator();
 addBtn.addEventListener("click", function (e) {
   const box = boxCreator();
 
-  if (boxManager.getBoxes().length < 10) {
-    boxManager.addToBoxes(box);
-    const item = document.createElement("div");
-    item.classList.add("box");
-    item.setAttribute("data-id", box.getId());
-    item.innerHTML = `<div class="box">
+  // if (boxManager.getBoxes().length < 10) {
+  boxManager.addToBoxes(box);
+  const item = document.createElement("div");
+  item.classList.add("box");
+  item.setAttribute("data-id", box.getId());
+  item.innerHTML = `
     <button class="btn subtract">-</button>
     <button class="btn num">0</button>
     <button class="btn add">+</button>
     <ion-icon class="icon" name="trash-bin-outline"></ion-icon>
-    </div>`;
-    boxCont.appendChild(item);
-    console.log(boxManager.getBoxes());
-  }
+    `;
+  boxCont.appendChild(item);
+
+  boxManager.increaseboxesCounter();
+  // }
 
   emptyText.classList.add("hidden");
+  boxesNum.textContent = boxManager.getboxesCounter();
+});
+
+boxCont.addEventListener("click", function (e) {
+  // prettier-ignore
+  if (!e.target.classList.contains("subtract") && !e.target.classList.contains("add") && !e.target.classList.contains('num')) return;
+
+  const targetBox = boxManager
+    .getBoxes()
+    .find(
+      (box) => box.getId() === e.target.closest(".box").getAttribute("data-id")
+    );
+
+  if (e.target.classList.contains("subtract")) {
+    console.log(e.target.closest(".box").getAttribute("data-id"));
+
+    targetBox.decreaseCounter();
+
+    console.log(targetBox.getCounter());
+  }
+
+  if (e.target.classList.contains("add")) {
+    console.log(e.target.closest(".box").getAttribute("data-id"));
+
+    targetBox.increaseCounter();
+
+    console.log(targetBox.getCounter());
+  }
 });
