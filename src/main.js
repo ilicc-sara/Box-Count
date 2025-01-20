@@ -53,7 +53,7 @@ addBtn.addEventListener("click", function (e) {
     <button class="btn subtract">-</button>
     <button id="${box.getId()}" class="btn num">${box.getCounter()}</button>
     <button class="btn add">+</button>
-    <ion-icon class="icon" name="trash-bin-outline"></ion-icon>
+    <ion-icon class="delete" name="trash-bin-outline"></ion-icon>
     `;
     boxCont.appendChild(item);
 
@@ -66,7 +66,7 @@ addBtn.addEventListener("click", function (e) {
 
 boxCont.addEventListener("click", function (e) {
   // prettier-ignore
-  if (!e.target.classList.contains("subtract") && !e.target.classList.contains("add")) return;
+  if (!e.target.classList.contains("subtract") && !e.target.classList.contains("add") && !e.target.classList.contains("delete")) return;
 
   const targetBox = boxManager
     .getBoxes()
@@ -87,4 +87,9 @@ boxCont.addEventListener("click", function (e) {
   }
   element.textContent = targetBox.getCounter();
   totalNum.textContent = boxManager.getTotalCounter();
+
+  if (e.target.classList.contains("delete")) {
+    const deleteEl = e.target.closest(".box");
+    deleteEl.remove();
+  }
 });
