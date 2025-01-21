@@ -32,6 +32,8 @@ function boxManagerCreator() {
   const increaseboxesCounter = () => (boxesCounter += 1);
   const decreaseboxCounter = () => (boxesCounter -= 1);
   const getboxesCounter = () => boxesCounter;
+  // napravi funkciju get total counter koja radi reduce na arr boxes i proveriti koliko je zbir svih countera
+  // const setBoxesCounter = () => boxesCounter = boxes.lenght;
 
   const getTotalCounter = () => totalCounter;
   const increaseTotalCounter = () => (totalCounter += 1);
@@ -44,9 +46,8 @@ function boxManagerCreator() {
 const boxManager = boxManagerCreator();
 
 addBtn.addEventListener("click", function (e) {
-  const box = boxCreator();
-
   if (boxManager.getBoxes().length < 10) {
+    const box = boxCreator();
     boxManager.addToBoxes(box);
     const item = document.createElement("div");
     item.classList.add("box");
@@ -69,14 +70,13 @@ addBtn.addEventListener("click", function (e) {
 boxCont.addEventListener("click", function (e) {
   // prettier-ignore
   if (!e.target.classList.contains("subtract") && !e.target.classList.contains("add") && !e.target.classList.contains("delete")) return;
+  const targetId = e.target.closest(".box").getAttribute("data-id");
 
   const targetBox = boxManager
     .getBoxes()
-    .find(
-      (box) => box.getId() === e.target.closest(".box").getAttribute("data-id")
-    );
+    .find((box) => box.getId() === targetId);
 
-  const element = document.getElementById(targetBox.getId());
+  const element = document.getElementById(targetId);
 
   if (e.target.classList.contains("subtract")) {
     targetBox.decreaseCounter();
