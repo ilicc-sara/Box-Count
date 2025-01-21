@@ -29,24 +29,22 @@ function boxManagerCreator() {
   const addToBoxes = (value) => boxes.push(value);
   const getBoxes = () => boxes;
 
-  const increaseboxesCounter = () => (boxesCounter += 1);
-  const decreaseboxCounter = () => (boxesCounter -= 1);
-  const getboxesCounter = () => boxesCounter;
+  const getboxesCounter = () => (boxesCounter = boxes.length);
   // napravi funkciju get total counter koja radi reduce na arr boxes i proveriti koliko je zbir svih countera
-  // const setBoxesCounter = () => boxesCounter = boxes.lenght;
 
-  const getTotalCounter = () => totalCounter;
-  const increaseTotalCounter = () => (totalCounter += 1);
-  const decreaseTotalCounter = () => (totalCounter -= 1);
-  const subtractTotalCounter = (value) => totalCounter - value;
+  const getTotalCounter = () =>
+    (totalCounter = boxes.reduce((acc, cur) => {
+      return acc + cur.getCounter();
+    }, 0));
   // prettier-ignore
-  return { addToBoxes, getBoxes, increaseboxesCounter, decreaseboxCounter, getboxesCounter, getTotalCounter, increaseTotalCounter, decreaseTotalCounter, subtractTotalCounter };
+  return { addToBoxes, getBoxes, getboxesCounter, getTotalCounter };
 }
 
 const boxManager = boxManagerCreator();
 
 addBtn.addEventListener("click", function (e) {
-  if (boxManager.getBoxes().length < 10) {
+  // boxManager.setBoxesCounter();
+  if (boxManager.getboxesCounter() < 10) {
     const box = boxCreator();
     boxManager.addToBoxes(box);
     const item = document.createElement("div");
@@ -59,8 +57,6 @@ addBtn.addEventListener("click", function (e) {
     <ion-icon class="delete" name="trash-bin-outline"></ion-icon>
     `;
     boxCont.appendChild(item);
-
-    boxManager.increaseboxesCounter();
   }
 
   emptyText.classList.add("hidden");
@@ -80,25 +76,24 @@ boxCont.addEventListener("click", function (e) {
 
   if (e.target.classList.contains("subtract")) {
     targetBox.decreaseCounter();
-    boxManager.decreaseTotalCounter();
   }
 
   if (e.target.classList.contains("add")) {
     targetBox.increaseCounter();
-    boxManager.increaseTotalCounter();
   }
   element.textContent = targetBox.getCounter();
   totalNum.textContent = boxManager.getTotalCounter();
 
   if (e.target.classList.contains("delete")) {
-    console.log(targetBox.getCounter());
-    boxManager.subtractTotalCounter(3);
+    const deleteIndex = boxManager
+      .getBoxes()
+      .findIndex((box) => box.getId() === targetId);
+
+    boxManager.getBoxes().splice(deleteIndex, 1);
+    boxesNum.textContent = boxManager.getboxesCounter();
     totalNum.textContent = boxManager.getTotalCounter();
-    console.log(boxManager.getTotalCounter());
 
     const deleteEl = e.target.closest(".box");
     deleteEl.remove();
-    boxManager.decreaseboxCounter();
-    boxesNum.textContent = boxManager.getboxesCounter();
   }
 });
