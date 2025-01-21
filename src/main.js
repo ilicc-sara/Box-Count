@@ -30,13 +30,15 @@ function boxManagerCreator() {
   const getBoxes = () => boxes;
 
   const increaseboxesCounter = () => (boxesCounter += 1);
+  const decreaseboxCounter = () => (boxesCounter -= 1);
   const getboxesCounter = () => boxesCounter;
 
   const getTotalCounter = () => totalCounter;
   const increaseTotalCounter = () => (totalCounter += 1);
   const decreaseTotalCounter = () => (totalCounter -= 1);
+  const subtractTotalCounter = (value) => totalCounter - value;
   // prettier-ignore
-  return { addToBoxes, getBoxes, increaseboxesCounter, getboxesCounter, getTotalCounter, increaseTotalCounter, decreaseTotalCounter };
+  return { addToBoxes, getBoxes, increaseboxesCounter, decreaseboxCounter, getboxesCounter, getTotalCounter, increaseTotalCounter, decreaseTotalCounter, subtractTotalCounter };
 }
 
 const boxManager = boxManagerCreator();
@@ -89,7 +91,14 @@ boxCont.addEventListener("click", function (e) {
   totalNum.textContent = boxManager.getTotalCounter();
 
   if (e.target.classList.contains("delete")) {
+    console.log(targetBox.getCounter());
+    boxManager.subtractTotalCounter(3);
+    totalNum.textContent = boxManager.getTotalCounter();
+    console.log(boxManager.getTotalCounter());
+
     const deleteEl = e.target.closest(".box");
     deleteEl.remove();
+    boxManager.decreaseboxCounter();
+    boxesNum.textContent = boxManager.getboxesCounter();
   }
 });
